@@ -33,7 +33,7 @@ jobs:
         run: |
           echo "Test commit at $(date)" >> test-file.txt
           git add test-file.txt
-          git commit -m "Test commit created during workflow run"
+          git commit -m "Test commit created during workflow run [skip ci]"
           git push
           echo "=== After push ==="
           echo "New commit SHA: $(git rev-parse HEAD)"
