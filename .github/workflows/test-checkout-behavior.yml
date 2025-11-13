@@ -1,0 +1,55 @@
+name: Test Checkout Behavior
+
+on:
+  push:
+    branches:
+      - main
+      - copilot/**
+  workflow_dispatch:
+
+jobs:
+  test-checkout:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: First checkout
+        uses: actions/checkout@v4
+      
+      - name: Log first checkout SHA
+        run: |
+          echo "=== First checkout ==="
+          echo "Current commit SHA: $(git rev-parse HEAD)"
+          echo "Current branch: $(git branch --show-current)"
+          git --no-pager log -1 --oneline
+      
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+      
+      - name: Create and push new commit
+        run: |
+          echo "Test commit at $(date)" >> test-file.txt
+          git add test-file.txt
+          git commit -m "Test commit created during workflow run"
+          git push
+          echo "=== After push ==="
+          echo "New commit SHA: $(git rev-parse HEAD)"
+      
+      - name: Second checkout
+        uses: actions/checkout@v4
+      
+      - name: Log second checkout SHA
+        run: |
+          echo "=== Second checkout ==="
+          echo "Current commit SHA: $(git rev-parse HEAD)"
+          echo "Current branch: $(git branch --show-current)"
+          git --no-pager log -1 --oneline
+      
+      - name: Compare SHAs
+        run: |
+          echo "=== Comparison ==="
+          echo "This test shows whether actions/checkout uses the original ref"
+          echo "or pulls the latest commit after a new commit was pushed during the workflow."
