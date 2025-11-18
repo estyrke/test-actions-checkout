@@ -41,6 +41,8 @@ jobs:
   second-checkout-and-compare:
     runs-on: ubuntu-latest
     needs: first-checkout-and-commit
+    permissions:
+      contents: read
     
     steps:
       - name: Second checkout
