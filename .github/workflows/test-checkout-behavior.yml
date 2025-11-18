@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-checkout:
+  first-checkout-and-commit:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -37,7 +37,12 @@ jobs:
           git push
           echo "=== After push ==="
           echo "New commit SHA: $(git rev-parse HEAD)"
-      
+  
+  second-checkout-and-compare:
+    runs-on: ubuntu-latest
+    needs: first-checkout-and-commit
+    
+    steps:
       - name: Second checkout
         uses: actions/checkout@v4
       
